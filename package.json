@@ -16,5 +16,10 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress"
+    },
+    "dependencies": {
+        "@material-ui/core": "^4.11.0",
+        "react-router": "^5.2.0",
+        "react-router-dom": "^5.2.0"
     }
 }

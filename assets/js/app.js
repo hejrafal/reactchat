@@ -1,9 +1,6 @@
-import '../css/app.css';
-
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDom from 'react-dom';
+import MainPage from "./Components/MainPage";
 
-//const el = React.createElement('h2', null, 'Hakuna matata');
-const el = <h2>Hakuna matata</h2>
 
-ReactDOM.render(el, document.getElementById('test'));
+ReactDom.render(<MainPage/>, document.getElementById('page'));
