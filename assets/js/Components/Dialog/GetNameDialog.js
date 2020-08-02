@@ -17,7 +17,7 @@ export default function getNameDialog({open, handleClose}) {
     }
 
     return (
-        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+        <Dialog open={open} onClose={() => handleClose(username)} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">Podaj login</DialogTitle>
             <DialogContent>
                 <DialogContentText>

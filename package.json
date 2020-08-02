@@ -19,6 +19,7 @@
     },
     "dependencies": {
         "@material-ui/core": "^4.11.0",
+        "moment": "^2.27.0",
         "react-router": "^5.2.0",
         "react-router-dom": "^5.2.0"
     }

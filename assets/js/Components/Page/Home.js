@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import {Grid} from "@material-ui/core";
-import Paper from "@material-ui/core/Paper";
 import Button from '@material-ui/core/Button';
 import Typography from "@material-ui/core/Typography";
 import GetNameDialog from "../Dialog/GetNameDialog";
 import Message from "../Message/Message";
+import MessageCreater from "../MessageCreater/MessageCreater";
+import moment from "moment";
 
 const style = {
     Paper: {padding: 20, margin: 10}
@@ -38,7 +39,17 @@ export default function Home() {
         }
     </div>);
 
-    console.log(messagesList);
+    const handleAddMessage = (message) => {
+        const newMessage = {
+            id: Math.random(),
+            username: username,
+            date: moment().format('Y-m-d H:i'),
+            message: message
+        }
+        const newMessages = [...messages, newMessage];
+        setMessages(newMessages);
+    };
+
     return (
         <Grid container>
 
@@ -56,6 +67,7 @@ export default function Home() {
 
             <GetNameDialog open={open} handleClose={handleClose}/>
 
+            <MessageCreater handleAddMessage={handleAddMessage} />
         </Grid>
     )
 
