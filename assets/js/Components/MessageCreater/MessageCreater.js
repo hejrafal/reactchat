@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
-import {Grid, TextField} from "@material-ui/core";
+import {Grid, TextField, InputBase, IconButton} from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 export default function ({handleAddMessage}) {
 
@@ -17,10 +18,15 @@ export default function ({handleAddMessage}) {
 
     return (
         <Grid container>
-            <TextField id="standard-basic" label="Standard" value={message} onChange={messageChanged} />
-            <Button variant="outlined" color="primary" onClick={createMessage}>
-                Add message
-            </Button>
+            <Grid item xs={11}>
+                <TextField fullWidth id="standard-basic" label="Type message" value={message}
+                           onChange={messageChanged}/>
+            </Grid>
+            <Grid item xs={1}>
+                <IconButton color="primary" onClick={createMessage}>
+                    <AddCircleIcon/>
+                </IconButton>
+            </Grid>
         </Grid>
     );
 }

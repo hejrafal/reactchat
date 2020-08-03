@@ -1,11 +1,20 @@
 import React from 'react';
-import {Box} from "@material-ui/core";
+import {Paper, Grid, Typography} from "@material-ui/core";
 
 export default function getMessage({username, date, message}) {
 
     return (
-        <Box>
+        <Grid item>
             {username}: {message}
-        </Box>
+        </Grid>
+
+        /*<Grid container wrap="nowrap" spacing={2}>
+            <Grid item>
+                {username}:
+            </Grid>
+            <Grid item xs>
+                <Typography>{message}</Typography>
+            </Grid>
+        </Grid>*/
     )
 }

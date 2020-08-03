@@ -1,6 +1,7 @@
 {
     "devDependencies": {
         "@babel/preset-react": "7.0.0",
+        "@material-ui/icons": "^4.9.1",
         "@symfony/webpack-encore": "^0.30.0",
         "core-js": "^3.0.0",
         "eslint-plugin-react": "^7.20.5",

@@ -1,14 +1,13 @@
 import React, {useState} from 'react';
-import {Grid} from "@material-ui/core";
-import Button from '@material-ui/core/Button';
-import Typography from "@material-ui/core/Typography";
+import {Grid, Paper, AppBar, Toolbar, IconButton, Typography, Button} from "@material-ui/core";
 import GetNameDialog from "../Dialog/GetNameDialog";
 import Message from "../Message/Message";
 import MessageCreater from "../MessageCreater/MessageCreater";
 import moment from "moment";
+import MenuIcon from '@material-ui/icons/Menu';
 
 const style = {
-    Paper: {padding: 20, margin: 10}
+    Paper: {padding: 20, margin: 10, height: 500, overflowY: 'auto'}
 };
 
 export default function Home() {
@@ -18,6 +17,10 @@ export default function Home() {
         {id: 1, username: 'Rafał', date: '2020-08-01 20:21', message: 'Cześć'},
         {id: 2, username: 'Sylwia', date: '2020-08-01 20:23', message: 'Siemano'},
         {id: 3, username: 'Rafał', date: '2020-08-01 20:24', message: 'Co tam słychać?'},
+    ]);
+    const [users, setUsers] = useState([
+        {id: 1, username: 'Rafał'},
+        {id: 2, username: 'Sylwia'}
     ]);
 
     const handleClickOpen = () => {
@@ -38,6 +41,11 @@ export default function Home() {
                 message={item.message}/>)
         }
     </div>);
+    const usersList = (
+        <div>
+            {users.map(user => <Typography key={user.id}>{user.username}</Typography>)}
+        </div>
+    );
 
     const handleAddMessage = (message) => {
         const newMessage = {
@@ -52,22 +60,36 @@ export default function Home() {
 
     return (
         <Grid container>
+            <AppBar position="static">
+                <Toolbar>
+                    <Typography variant="h6">
+                        React Chat App :) hello, {username}
+                    </Typography>
+                </Toolbar>
+            </AppBar>
 
-            <Typography variant="h5" gutterBottom>
-                Witaj {username}
-            </Typography>
-            <Grid item xs={12}>
-                {messagesList}
-            </Grid>
-            <Grid xs={4} item>
-                <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-                    Open form dialog
-                </Button>
+            <Grid container>
+                <Grid item xs={4}>
+                    <Paper style={style.Paper}>
+                        {usersList}
+                    </Paper>
+                </Grid>
+                <Grid item xs={8}>
+                    <Paper style={style.Paper}>
+                        {messagesList}
+                    </Paper>
+                    <MessageCreater handleAddMessage={handleAddMessage}/>
+                </Grid>
             </Grid>
 
             <GetNameDialog open={open} handleClose={handleClose}/>
 
-            <MessageCreater handleAddMessage={handleAddMessage} />
+
+            <Grid xs={12} item>
+                <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+                    Open form dialog
+                </Button>
+            </Grid>
         </Grid>
     )
 
