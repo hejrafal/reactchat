@@ -1,33 +1,50 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Grid, Paper, AppBar, Toolbar, IconButton, Typography, Button} from "@material-ui/core";
-import GetNameDialog from "../Dialog/GetNameDialog";
 import Message from "../Message/Message";
 import MessageCreater from "../MessageCreater/MessageCreater";
 import moment from "moment";
-import MenuIcon from '@material-ui/icons/Menu';
 import LoginBox from "../LoginBox/LoginBox";
 import axios from 'axios';
 
 const style = {
-    Paper: {padding: 20, margin: 10, height: 500, overflowY: 'auto'}
+    Paper: {padding: 20, margin: 10, height: 300, overflowY: 'auto'}
 };
 
 export default function Home() {
-    const [username, setUsername] = useState('');
+    const [username, setUsername] = useState('User ' + Math.floor(Math.random() * 100));
     const [messages, setMessages] = useState([
         {id: 1, username: 'Rafał', date: '2020-08-01 20:21', message: 'Cześć'},
         {id: 2, username: 'Sylwia', date: '2020-08-01 20:23', message: 'Siemano'},
-        {id: 3, username: 'Rafał', date: '2020-08-01 20:24', message: 'Co tam słychać?'},
+        {id: 3, username: 'Rafał', date: '2020-08-01 20:24', message: 'Co tam słychać?'}
     ]);
     const [users, setUsers] = useState([
         {id: 1, username: 'Rafał'},
         {id: 2, username: 'Sylwia'}
     ]);
+    /*const handleServerMessage = useCallback((data) => {
+        console.log(messages);
+        let newMessages = [...messages, data];
+        setMessages(newMessages);
+    }, [messages]);*/
+
+    useEffect(() => {
+        const topic = encodeURIComponent('http://example.com/books/1');
+        let eventSource = new EventSource("http://localhost:3000/.well-known/mercure?topic=" + topic);
+        console.log("start");
+        eventSource.onmessage = e => {
+            console.log(messages, "from first");
+            const newMessage = JSON.parse(e.data);
+            setMessages([...messages, newMessage]);
+        };
+    }, [messages]);
 
     const onLoginInserted = (username) => {
         setUsername(username);
-        axios.post('http://rchat.local/new-user', {username: username})
-            .then(response => console.log(response));
+        axios.post('http://rchat.local/new-user', {username: username});
+    };
+
+    const onMessageSend = (username, message) => {
+        axios.post('http://rchat.local/new-message', {username: username, message: message});
     };
 
     const messagesList = (<div>
@@ -39,22 +56,31 @@ export default function Home() {
                 message={item.message}/>)
         }
     </div>);
-    const usersList = (
-        <div>
-            {users.map(user => <Typography key={user.id}>{user.username}</Typography>)}
-        </div>
-    );
+    const usersList = (<div>
+        {users.map(user => <Typography key={user.id}>{user.username}</Typography>)}
+    </div>);
 
     const handleAddMessage = (message) => {
         const newMessage = {
-            id: Math.random(),
+            id: Math.floor(Math.random() * 1000),
             username: username,
             date: moment().format('Y-m-d H:i'),
             message: message
         }
-        const newMessages = [...messages, newMessage];
-        setMessages(newMessages);
+        //let newMessages = [...messages, newMessage];
+        //setMessages(newMessages);
+
+        axios.post('http://rchat.local/new-message', newMessage);
     };
+
+    const handleServerMessage1 = (data) => {
+        console.log(messages);
+        let newMessages = [...messages, data];
+        setMessages(newMessages);
+        /*const newUser = {id: Math.random(), username: data.username};
+        const newUsers = [...users, newUser];
+        setUsers(newUsers);*/
+    }
 
     return (
         username === '' ?
