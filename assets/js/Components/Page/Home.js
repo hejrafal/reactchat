@@ -5,13 +5,14 @@ import Message from "../Message/Message";
 import MessageCreater from "../MessageCreater/MessageCreater";
 import moment from "moment";
 import MenuIcon from '@material-ui/icons/Menu';
+import LoginBox from "../LoginBox/LoginBox";
+import axios from 'axios';
 
 const style = {
     Paper: {padding: 20, margin: 10, height: 500, overflowY: 'auto'}
 };
 
 export default function Home() {
-    const [open, setOpen] = React.useState(true);
     const [username, setUsername] = useState('');
     const [messages, setMessages] = useState([
         {id: 1, username: 'Rafał', date: '2020-08-01 20:21', message: 'Cześć'},
@@ -23,13 +24,10 @@ export default function Home() {
         {id: 2, username: 'Sylwia'}
     ]);
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = (username) => {
-        setOpen(false);
+    const onLoginInserted = (username) => {
         setUsername(username);
+        axios.post('http://rchat.local/new-user', {username: username})
+            .then(response => console.log(response));
     };
 
     const messagesList = (<div>
@@ -59,38 +57,31 @@ export default function Home() {
     };
 
     return (
-        <Grid container>
-            <AppBar position="static">
-                <Toolbar>
-                    <Typography variant="h6">
-                        React Chat App :) hello, {username}
-                    </Typography>
-                </Toolbar>
-            </AppBar>
-
+        username === '' ?
+            <LoginBox onLoginInserted={onLoginInserted}/> :
             <Grid container>
-                <Grid item xs={4}>
-                    <Paper style={style.Paper}>
-                        {usersList}
-                    </Paper>
-                </Grid>
-                <Grid item xs={8}>
-                    <Paper style={style.Paper}>
-                        {messagesList}
-                    </Paper>
-                    <MessageCreater handleAddMessage={handleAddMessage}/>
+                <AppBar position="static">
+                    <Toolbar>
+                        <Typography variant="h6">
+                            React Chat App :) hello, {username}
+                        </Typography>
+                    </Toolbar>
+                </AppBar>
+
+                <Grid container>
+                    <Grid item xs={4}>
+                        <Paper style={style.Paper}>
+                            {usersList}
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={8}>
+                        <Paper style={style.Paper}>
+                            {messagesList}
+                        </Paper>
+                        <MessageCreater handleAddMessage={handleAddMessage}/>
+                    </Grid>
                 </Grid>
             </Grid>
-
-            <GetNameDialog open={open} handleClose={handleClose}/>
-
-
-            <Grid xs={12} item>
-                <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-                    Open form dialog
-                </Button>
-            </Grid>
-        </Grid>
     )
 
 }

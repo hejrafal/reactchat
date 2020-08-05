@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
-import {Grid, TextField, InputBase, IconButton} from "@material-ui/core";
-import Button from "@material-ui/core/Button";
+import {Grid, TextField, IconButton} from "@material-ui/core";
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 
 export default function ({handleAddMessage}) {
