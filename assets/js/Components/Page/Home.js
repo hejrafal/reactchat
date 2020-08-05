@@ -1,5 +1,5 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {Grid, Paper, AppBar, Toolbar, IconButton, Typography, Button} from "@material-ui/core";
+import React, {useEffect, useState} from 'react';
+import {Grid, Paper, AppBar, Toolbar, Typography} from "@material-ui/core";
 import Message from "../Message/Message";
 import MessageCreater from "../MessageCreater/MessageCreater";
 import moment from "moment";
@@ -21,18 +21,11 @@ export default function Home() {
         {id: 1, username: 'Rafał'},
         {id: 2, username: 'Sylwia'}
     ]);
-    /*const handleServerMessage = useCallback((data) => {
-        console.log(messages);
-        let newMessages = [...messages, data];
-        setMessages(newMessages);
-    }, [messages]);*/
 
     useEffect(() => {
         const topic = encodeURIComponent('http://example.com/books/1');
-        let eventSource = new EventSource("http://localhost:3000/.well-known/mercure?topic=" + topic);
-        console.log("start");
+        const eventSource = new EventSource("http://localhost:3000/.well-known/mercure?topic=" + topic);
         eventSource.onmessage = e => {
-            console.log(messages, "from first");
             const newMessage = JSON.parse(e.data);
             setMessages([...messages, newMessage]);
         };
@@ -41,10 +34,6 @@ export default function Home() {
     const onLoginInserted = (username) => {
         setUsername(username);
         axios.post('http://rchat.local/new-user', {username: username});
-    };
-
-    const onMessageSend = (username, message) => {
-        axios.post('http://rchat.local/new-message', {username: username, message: message});
     };
 
     const messagesList = (<div>
@@ -67,16 +56,11 @@ export default function Home() {
             date: moment().format('Y-m-d H:i'),
             message: message
         }
-        //let newMessages = [...messages, newMessage];
-        //setMessages(newMessages);
 
         axios.post('http://rchat.local/new-message', newMessage);
     };
 
     const handleServerMessage1 = (data) => {
-        console.log(messages);
-        let newMessages = [...messages, data];
-        setMessages(newMessages);
         /*const newUser = {id: Math.random(), username: data.username};
         const newUsers = [...users, newUser];
         setUsers(newUsers);*/
