@@ -12,10 +12,9 @@ const style = {
 
 export default function Home() {
     const [username, setUsername] = useState('User ' + Math.floor(Math.random() * 100));
+    const [newMessage, setNewMessage] = useState(null);
     const [messages, setMessages] = useState([
-        {id: 1, username: 'Rafał', date: '2020-08-01 20:21', message: 'Cześć'},
-        {id: 2, username: 'Sylwia', date: '2020-08-01 20:23', message: 'Siemano'},
-        {id: 3, username: 'Rafał', date: '2020-08-01 20:24', message: 'Co tam słychać?'}
+        //{id: 1, username: 'Rafał', date: '2020-08-01 20:21', message: 'Cześć'}
     ]);
     const [users, setUsers] = useState([
         {id: 1, username: 'Rafał'},
@@ -27,9 +26,18 @@ export default function Home() {
         const eventSource = new EventSource("http://localhost:3000/.well-known/mercure?topic=" + topic);
         eventSource.onmessage = e => {
             const newMessage = JSON.parse(e.data);
-            setMessages([...messages, newMessage]);
+            newMessage.id = Math.floor(Math.random() * 1000);
+            setNewMessage(newMessage);
         };
-    }, [messages]);
+
+    }, []);
+
+    useEffect(() => {
+        if (newMessage !== null) {
+            const newMessages = [...messages, newMessage];
+            setMessages(newMessages);
+        }
+    }, [newMessage]);
 
     const onLoginInserted = (username) => {
         setUsername(username);
@@ -38,12 +46,12 @@ export default function Home() {
 
     const messagesList = (<div>
         {messages.map(item =>
-            <Message
+            (<Message
                 key={item.id}
                 username={item.username}
                 date={item.date}
                 message={item.message}/>)
-        }
+        )}
     </div>);
     const usersList = (<div>
         {users.map(user => <Typography key={user.id}>{user.username}</Typography>)}
