@@ -1,43 +1,31 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {Grid, Paper, AppBar, Toolbar, Typography} from "@material-ui/core";
 import Message from "../Message/Message";
 import MessageCreater from "../MessageCreater/MessageCreater";
 import moment from "moment";
 import LoginBox from "../LoginBox/LoginBox";
 import axios from 'axios';
+import {connect} from 'react-redux';
 
 const style = {
     Paper: {padding: 20, margin: 10, height: 300, overflowY: 'auto'}
 };
 
-export default function Home() {
+//{id: 1, username: 'Rafał', date: '2020-08-01 20:21', message: 'Cześć'}
+
+function Home({messages, onAddMessage, ...props}) {
     const [username, setUsername] = useState('User ' + Math.floor(Math.random() * 100));
-    const [newMessage, setNewMessage] = useState(null);
-    const [messages, setMessages] = useState([
-        //{id: 1, username: 'Rafał', date: '2020-08-01 20:21', message: 'Cześć'}
-    ]);
-    const [users, setUsers] = useState([
-        {id: 1, username: 'Rafał'},
-        {id: 2, username: 'Sylwia'}
-    ]);
+    const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        const topic = encodeURIComponent('http://example.com/books/1');
+        const topic = encodeURIComponent('all'); //http://example.com/books/1
         const eventSource = new EventSource("http://localhost:3000/.well-known/mercure?topic=" + topic);
         eventSource.onmessage = e => {
             const newMessage = JSON.parse(e.data);
             newMessage.id = Math.floor(Math.random() * 1000);
-            setNewMessage(newMessage);
+            onAddMessage(newMessage);
         };
-
     }, []);
-
-    useEffect(() => {
-        if (newMessage !== null) {
-            const newMessages = [...messages, newMessage];
-            setMessages(newMessages);
-        }
-    }, [newMessage]);
 
     const onLoginInserted = (username) => {
         setUsername(username);
@@ -61,7 +49,7 @@ export default function Home() {
         const newMessage = {
             id: Math.floor(Math.random() * 1000),
             username: username,
-            date: moment().format('Y-m-d H:i'),
+            date: moment().format('Y-m-d H:m:s'),
             message: message
         }
 
@@ -103,3 +91,17 @@ export default function Home() {
     )
 
 }
+
+const mapStateToProps = state => {
+    return {
+        messages: state.messages
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onAddMessage: (message) => dispatch({type: 'MESSAGE_ADD', message: message})
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home)
