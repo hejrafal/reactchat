@@ -17,6 +17,7 @@
         "symfony/framework-bundle": "5.1.*",
         "symfony/maker-bundle": "^1.20",
         "symfony/mercure-bundle": "^0.2.5",
+        "symfony/security-bundle": "5.1.*",
         "symfony/twig-bundle": "5.1.*",
         "symfony/webpack-encore-bundle": "^1.7",
         "symfony/yaml": "5.1.*",
@@ -24,6 +25,8 @@
         "twig/twig": "^2.12|^3.0"
     },
     "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.3",
+        "fzaninotto/faker": "^1.9",
         "symfony/profiler-pack": "^1.0"
     },
     "config": {
