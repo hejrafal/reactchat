@@ -10,6 +10,12 @@ export default function ({handleAddMessage}) {
         setMessage(e.target.value);
     }
 
+    const onKeyPress = event => {
+        if (event.key === 'Enter') {
+            createMessage();
+        }
+    }
+
     const createMessage = () => {
         handleAddMessage(message)
         setMessage('');
@@ -19,7 +25,7 @@ export default function ({handleAddMessage}) {
         <Grid container>
             <Grid item xs={11}>
                 <TextField fullWidth id="standard-basic" label="Type message" value={message}
-                           onChange={messageChanged}/>
+                           onChange={messageChanged} onKeyPress={onKeyPress}/>
             </Grid>
             <Grid item xs={1}>
                 <IconButton color="primary" onClick={createMessage}>

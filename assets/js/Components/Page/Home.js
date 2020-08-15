@@ -14,7 +14,7 @@ const style = {
 //{id: 1, username: 'Rafał', date: '2020-08-01 20:21', message: 'Cześć'}
 
 function Home({messages, onAddMessage, ...props}) {
-    const [username, setUsername] = useState('User ' + Math.floor(Math.random() * 100));
+    const [username, setUsername] = useState(''); //'User ' + Math.floor(Math.random() * 100)
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
