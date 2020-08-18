@@ -64,7 +64,7 @@ function Home({messages, onAddMessage, ...props}) {
 
     return (
         username === '' ?
-            <LoginBox onLoginInserted={onLoginInserted}/> :
+            <LoginBox/> :
             <Grid container>
                 <AppBar position="static">
                     <Toolbar>
