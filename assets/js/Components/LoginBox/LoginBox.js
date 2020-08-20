@@ -1,13 +1,7 @@
 import React, {useState} from 'react';
 import {Grid, Paper} from "@material-ui/core";
-import Dialog from "@material-ui/core/Dialog";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import TextField from "@material-ui/core/TextField";
-import DialogActions from "@material-ui/core/DialogActions";
 import Button from "@material-ui/core/Button";
-import axios from "axios";
 
 
 const style = {
@@ -16,8 +10,8 @@ const style = {
 
 export default function ({onUserLogged}) {
 
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('user0');
+    const [password, setPassword] = useState('qwe123');
 
     const usernameChanged = (e) => {
         setUsername(e.target.value);
