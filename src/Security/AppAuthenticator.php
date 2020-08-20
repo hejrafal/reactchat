@@ -106,7 +106,7 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator implements Passwor
             return new RedirectResponse($targetPath);
         }
 
-        $data = ['success' => true, 'data' => $token->getUser()];
+        $data = ['success' => true, 'user' => $token->getUser()];
         $json = $this->serializer->serialize($data, 'json', ['groups' => ['user:base']]);
 
         return new Response($json);
@@ -123,6 +123,6 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator implements Passwor
             $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
         }
 
-        return new JsonResponse(['incorrect login or password :(']);
+        return new JsonResponse(['success' => false, 'message' => 'Incorrect password or user :(']);
     }
 }

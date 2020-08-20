@@ -14,7 +14,7 @@ const style = {
     Paper: {padding: 20, margin: 10, height: 500, overflowY: 'auto'}
 };
 
-export default function () {
+export default function ({onUserLogged}) {
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -40,7 +40,13 @@ export default function () {
             method: 'POST',
             body: JSON.stringify(data),
         })
-            .then(data => console.log(data));
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if(data.success) {
+                    onUserLogged(data.user);
+                }
+            });
     }
 
     const onKeyPress = event => {
@@ -62,6 +68,7 @@ export default function () {
                         type="text"
                         fullWidth
                         value={username}
+                        onKeyDown={onKeyPress}
                         onChange={usernameChanged}
                     />
                     <TextField
@@ -71,9 +78,10 @@ export default function () {
                         type="text"
                         fullWidth
                         value={password}
+                        onKeyDown={onKeyPress}
                         onChange={passwordChanged}
                     />
-                    <Button onClick={() => logIn(username, password)} onKeyDown={onKeyPress} color="primary">
+                    <Button onClick={() => logIn(username, password)} color="primary">
                         Akceptuj
                     </Button>
                 </Paper>

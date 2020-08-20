@@ -1,15 +1,16 @@
+import * as actions from '../actions';
+
 const initialState = {
-    messages: []
+    users: []
 }
 
 const reducer = (state = initialState, action) => {
 
-    console.log(action);
     switch (action.type) {
-        case 'MESSAGE_ADD': {
+        case actions.USER_LIST: {
             return {
                 ...state,
-                messages: state.messages.concat(action.message)
+                users: action.users
             }
         }
     }

@@ -1,11 +1,19 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 import MainPage from "./Components/MainPage";
-import {createStore} from 'redux';
-import reducer from "./store/reducer";
+import {createStore, combineReducers} from 'redux';
+import userReducer from "./store/reducers/user";
+import messageReducer from "./store/reducers/message";
+import mainReducer from "./store/reducers/main";
 import {Provider} from 'react-redux';
 
-const store = createStore(reducer);
+const rootReducer = combineReducers({
+    user: userReducer,
+    message: messageReducer,
+    main: mainReducer
+});
+
+const store = createStore(rootReducer);
 
 ReactDom.render(
     <Provider store={store}>

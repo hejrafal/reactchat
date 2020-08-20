@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Grid, TextField, IconButton} from "@material-ui/core";
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 
-export default function ({handleAddMessage}) {
+const MessageCreator = ({handleAddMessage}) => {
 
     const [message, setMessage] = useState('');
 
@@ -11,9 +11,7 @@ export default function ({handleAddMessage}) {
     }
 
     const onKeyPress = event => {
-        if (event.key === 'Enter') {
-            createMessage();
-        }
+        event.key === 'Enter' ? createMessage() : null;
     }
 
     const createMessage = () => {
@@ -35,3 +33,5 @@ export default function ({handleAddMessage}) {
         </Grid>
     );
 }
+
+export default MessageCreator;
