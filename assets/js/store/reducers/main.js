@@ -1,7 +1,8 @@
 import * as actions from '../actions';
 
 const initialState = {
-    user: null
+    user: null,
+    selectedConversation: null
 }
 
 const reducer = (state = initialState, action) => {
@@ -11,6 +12,12 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 user: action.user
+            }
+        }
+        case actions.SELECT_CONVERSATION: {
+            return {
+                ...state,
+                selectedConversation: action.data
             }
         }
     }

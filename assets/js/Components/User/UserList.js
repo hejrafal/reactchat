@@ -1,6 +1,7 @@
 import React from 'react';
 import {Avatar, List, ListItem, ListItemAvatar, ListItemText} from "@material-ui/core";
 import makeStyles from "@material-ui/core/styles/makeStyles";
+import shallowEqual from "react-redux/lib/utils/shallowEqual";
 
 const useStyles = makeStyles({
     bullet: {
@@ -10,16 +11,16 @@ const useStyles = makeStyles({
     },
 });
 
-const UserList = ({users}) => {
+const UserList = ({users, selected, onSelectConversation}) => {
 
     const classes = useStyles();
     const bull = <span className={classes.bullet}>•</span>;
 
     return (
         <List>
-            {users.map((user) => (
+            {users.map(user => (
                 <React.Fragment key={user.id}>
-                    <ListItem button>
+                    <ListItem button onClick={() => onSelectConversation(user)} selected={shallowEqual(selected, user)}>
                         <ListItemAvatar>
                             <Avatar alt="Profile Picture"/>
                         </ListItemAvatar>

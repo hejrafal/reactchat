@@ -8,6 +8,7 @@ import {connect} from 'react-redux';
 import * as actions from '../../store/actions';
 import UserList from "../User/UserList";
 import MessageList from "../Message/MessageList";
+import RoomList from "../Room/RoomList";
 
 const style = {
     Paper: {padding: 20, margin: 10, height: 300, overflowY: 'auto'}
@@ -15,7 +16,7 @@ const style = {
 
 //{id: 1, username: 'Rafał', date: '2020-08-01 20:21', message: 'Cześć'}
 
-function Home({messages, onAddMessage, user, users, onUserLogged, setUserList, ...props}) {
+function Home({messages, onAddMessage, user, users, onUserLogged, setUserList, onSelectConversation, selectedConversation, ...props}) {
     useEffect(() => {
         const topic = encodeURIComponent('all'); //http://example.com/books/1
         const eventSource = new EventSource("http://localhost:3000/.well-known/mercure?topic=" + topic);
@@ -45,6 +46,12 @@ function Home({messages, onAddMessage, user, users, onUserLogged, setUserList, .
         axios.post('http://rchat.local/new-message', newMessage);
     };
 
+    const rooms = [
+        {id: 1, name: 'Prywatny 1'},
+        {id: 2, name: 'Prywatny 2'},
+        {id: 3, name: 'Prywatny 3'}
+    ];
+
     return (
         user === null ?
             <LoginBox onUserLogged={onUserLogged}/> :
@@ -60,7 +67,11 @@ function Home({messages, onAddMessage, user, users, onUserLogged, setUserList, .
                 <Grid container>
                     <Grid item xs={4}>
                         <Paper style={style.Paper}>
-                            <UserList users={users}/>
+                            <RoomList rooms={rooms} selected={selectedConversation}
+                                      onSelectConversation={onSelectConversation}/>
+                            <hr/>
+                            <UserList users={users} selected={selectedConversation}
+                                      onSelectConversation={onSelectConversation}/>
                         </Paper>
                     </Grid>
                     <Grid item xs={8}>
@@ -79,7 +90,8 @@ const mapStateToProps = state => {
     return {
         messages: state.message.messages,
         user: state.main.user,
-        users: state.user.users
+        users: state.user.users,
+        selectedConversation: state.main.selectedConversation
     };
 };
 
@@ -88,6 +100,7 @@ const mapDispatchToProps = dispatch => {
         onAddMessage: message => dispatch({type: actions.MESSAGE_ADD, message: message}),
         onUserLogged: user => dispatch({type: actions.USER_LOGGED, user: user}),
         setUserList: users => dispatch({type: actions.USER_LIST, users: users}),
+        onSelectConversation: selected => dispatch({type: actions.SELECT_CONVERSATION, data: selected}),
     }
 }
 
