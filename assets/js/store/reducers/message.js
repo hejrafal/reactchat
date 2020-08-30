@@ -13,6 +13,18 @@ const reducer = (state = initialState, action) => {
                 messages: state.messages.concat(action.message)
             }
         }
+        case actions.USER_MESSAGES: {
+            return {
+                ...state,
+                messages: action.messages
+            }
+        }
+        case actions.ROOM_MESSAGES: {
+            return {
+                ...state,
+                messages: action.messages
+            }
+        }
     }
 
     return state;

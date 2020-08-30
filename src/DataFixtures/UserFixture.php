@@ -21,6 +21,7 @@ class UserFixture extends BaseFixture
     protected function loadData(ObjectManager $manager)
     {
         $this->createMany(User::class, 10, function (User $user, $i) {
+            echo "User" . PHP_EOL;
             $user
                 ->setUsername(sprintf('user%d', $i))
                 ->setPassword($this->encoder->encodePassword($user, 'qwe123'))

@@ -7,9 +7,9 @@ const MessageList = ({messages}) => {
         {messages.map(item =>
             (<Message
                 key={item.id}
-                username={item.username}
+                username={`${item.participant.user.name} ${item.participant.user.surname}`}
                 date={item.date}
-                message={item.message}/>)
+                message={item.content}/>)
         )}
     </div>
 }

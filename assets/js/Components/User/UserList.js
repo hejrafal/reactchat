@@ -15,12 +15,13 @@ const UserList = ({users, selected, onSelectConversation}) => {
 
     const classes = useStyles();
     const bull = <span className={classes.bullet}>•</span>;
+    const data = selected ? selected.data : null;
 
     return (
         <List>
             {users.map(user => (
                 <React.Fragment key={user.id}>
-                    <ListItem button onClick={() => onSelectConversation(user)} selected={shallowEqual(selected, user)}>
+                    <ListItem button onClick={() => onSelectConversation(user)} selected={shallowEqual(data, user)}>
                         <ListItemAvatar>
                             <Avatar alt="Profile Picture"/>
                         </ListItemAvatar>

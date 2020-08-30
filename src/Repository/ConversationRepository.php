@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Conversation;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -47,4 +48,18 @@ class ConversationRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findConversationBetween(User $user, User $withUser)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.isCouple = :isCouple')
+            ->leftJoin('c.participants', 'p1')
+            ->leftJoin('c.participants', 'p2')
+            ->andWhere('p1.user = :u1')
+            ->andWhere('p2.user = :u2')
+            ->setParameter('isCouple', true)
+            ->setParameter('u1', $user)
+            ->setParameter('u2', $withUser)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

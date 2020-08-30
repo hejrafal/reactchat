@@ -16,7 +16,8 @@ const style = {
 
 //{id: 1, username: 'Rafał', date: '2020-08-01 20:21', message: 'Cześć'}
 
-function Home({messages, onAddMessage, user, users, onUserLogged, setUserList, onSelectConversation, selectedConversation, ...props}) {
+function Home({messages, onAddMessage, user, users, onUserLogged, setUserList, onSelectConversation, selectedConversation,
+                  setUserMessages, setRoomMessages, ...props}) {
     useEffect(() => {
         const topic = encodeURIComponent('all'); //http://example.com/books/1
         const eventSource = new EventSource("http://localhost:3000/.well-known/mercure?topic=" + topic);
@@ -46,11 +47,40 @@ function Home({messages, onAddMessage, user, users, onUserLogged, setUserList, o
         axios.post('http://rchat.local/new-message', newMessage);
     };
 
+    const findUserMessage = (selectedUser) => {
+        const uri = `http://rchat.local/messages/user/${selectedUser.id}`;
+        fetch(uri, {
+            credentials: 'same-origin'
+        })
+            .then(response => response.json())
+            .then(data => setUserMessages(data));
+    }
+
+    const findRoomMessage = (selectedRoom) => {
+        const uri = `http://rchat.local/messages/room/${selectedRoom.id}`;
+        fetch(uri, {
+            credentials: 'same-origin'
+        })
+            .then(response => response.json())
+            .then(data => setRoomMessages(data));
+    }
+
     const rooms = [
         {id: 1, name: 'Prywatny 1'},
         {id: 2, name: 'Prywatny 2'},
         {id: 3, name: 'Prywatny 3'}
     ];
+
+    const onSelectUser = user => {
+        onSelectConversation({data: user, type: 'user'});
+        findUserMessage(user)
+    }
+
+    const onSelectRoom = room => {
+        onSelectConversation({data: room, type: 'room'});
+    }
+
+
 
     return (
         user === null ?
@@ -68,10 +98,10 @@ function Home({messages, onAddMessage, user, users, onUserLogged, setUserList, o
                     <Grid item xs={4}>
                         <Paper style={style.Paper}>
                             <RoomList rooms={rooms} selected={selectedConversation}
-                                      onSelectConversation={onSelectConversation}/>
+                                      onSelectConversation={onSelectRoom}/>
                             <hr/>
                             <UserList users={users} selected={selectedConversation}
-                                      onSelectConversation={onSelectConversation}/>
+                                      onSelectConversation={onSelectUser}/>
                         </Paper>
                     </Grid>
                     <Grid item xs={8}>
@@ -101,6 +131,8 @@ const mapDispatchToProps = dispatch => {
         onUserLogged: user => dispatch({type: actions.USER_LOGGED, user: user}),
         setUserList: users => dispatch({type: actions.USER_LIST, users: users}),
         onSelectConversation: selected => dispatch({type: actions.SELECT_CONVERSATION, data: selected}),
+        setUserMessages: messages => dispatch({type: actions.USER_MESSAGES, messages: messages}),
+        setRoomMessages: messages => dispatch({type: actions.ROOM_MESSAGES, messages: messages})
     }
 }
 
