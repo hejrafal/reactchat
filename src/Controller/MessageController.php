@@ -7,10 +7,9 @@ use App\Repository\ConversationRepository;
 use App\Repository\MessageRepository;
 use App\Service\ConversationBuilder;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
-class MessageController extends AbstractController
+class MessageController extends BaseController
 {
 
     /**
@@ -27,7 +26,8 @@ class MessageController extends AbstractController
 
         $messages = $messageRepository->findByConversation($conv);
         return $this->json($messages, 200, [], [
-            'groups' => ['messages']
+            'groups' => ['messages'],
+            'datetime_format' => 'Y-m-d H:i:s'
         ]);
     }
 

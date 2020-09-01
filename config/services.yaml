@@ -11,12 +11,20 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    get_set_method_normalizer:
-        class: Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer
+
+    Symfony\Component\Serializer\Normalizer\ObjectNormalizer:
         tags: [serializer.normalizer]
-    object_normalizer:
-        class: Symfony\Component\Serializer\Normalizer\ObjectNormalizer
+    Symfony\Component\Serializer\Normalizer\DateTimeNormalizer:
         tags: [serializer.normalizer]
+    Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer:
+        tags: [serializer.normalizer]
+
+#    serializer.normalizer.datetime:
+#        class: Symfony\Component\Serializer\Normalizer\DateTimeNormalizer
+#        arguments:
+#            - Symfony\Component\Serializer\Normalizer\DateTimeNormalizer::FORMAT_KEY: 'Y-m-d H:i:s'
+#        tags:
+#            - { name: serializer.normalizer, priority: -910 }
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
