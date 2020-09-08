@@ -2,7 +2,9 @@ import * as actions from '../actions';
 
 const initialState = {
     user: null,
-    selectedConversation: null
+    selectedUserOrRoom: null,
+    selectedConversation: null,
+    messagesRef: null
 }
 
 const reducer = (state = initialState, action) => {
@@ -14,10 +16,22 @@ const reducer = (state = initialState, action) => {
                 user: action.user
             }
         }
+        case actions.SELECT_USER_OR_ROOM: {
+            return {
+                ...state,
+                selectedUserOrRoom: action.userOrRoom
+            }
+        }
         case actions.SELECT_CONVERSATION: {
             return {
                 ...state,
-                selectedConversation: action.data
+                selectedConversation: action.conversation
+            }
+        }
+        case actions.SET_MESSAGES_REF: {
+            return {
+                ...state,
+                messagesRef: action.messagesRef
             }
         }
     }

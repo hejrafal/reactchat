@@ -26,7 +26,7 @@ class MessageRepository extends ServiceEntityRepository
             ->leftJoin('m.participant', 'p')
             ->andWhere('p.conversation = :conversation')
             ->setParameter('conversation', $conversation)
-            ->orderBy('m.createdAt', 'DESC')
+            ->orderBy('m.createdAt', 'ASC')
             ->getQuery()
             ->getResult()
             ;

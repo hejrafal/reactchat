@@ -15,20 +15,20 @@ class Message
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"messages"})
+     * @Groups({"messages", "message"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"messages"})
+     * @Groups({"messages", "message"})
      */
     private $content;
 
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"messages"})
+     * @Groups({"messages", "message"})
      */
     private $createdAt;
 

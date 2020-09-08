@@ -1,9 +1,7 @@
 import React, {useEffect, useState, useRef} from 'react';
 import {Grid, Paper, AppBar, Toolbar, Typography} from "@material-ui/core";
 import MessageCreator from "../MessageCreater/MessageCreator";
-import moment from "moment";
 import LoginBox from "../LoginBox/LoginBox";
-import axios from 'axios';
 import {connect} from 'react-redux';
 import * as actions from '../../store/actions';
 import UserList from "../User/UserList";
@@ -14,38 +12,27 @@ const style = {
     Paper: {padding: 20, margin: 10, height: 300, overflowY: 'auto'}
 };
 
-//{id: 1, username: 'Rafał', date: '2020-08-01 20:21', message: 'Cześć'}
+function Home({
+                  messages, onAddMessage, user, users, onUserLogged, setUserList, onSelectUserOrRoom, selectedUserOrRoom,
+                  setUserMessages, setRoomMessages, setSelectedConversation, ...props
+              }) {
 
-function Home({messages, onAddMessage, user, users, onUserLogged, setUserList, onSelectConversation, selectedConversation,
-                  setUserMessages, setRoomMessages, ...props}) {
     useEffect(() => {
-        const topic = encodeURIComponent('all'); //http://example.com/books/1
-        const eventSource = new EventSource("http://localhost:3000/.well-known/mercure?topic=" + topic);
+        if(!user) {
+            return;
+        }
+
+        const url = "http://localhost:3000/.well-known/mercure?topic=" + user.username;
+        const eventSource = new EventSource(url);
         eventSource.onmessage = e => {
             const newMessage = JSON.parse(e.data);
-            newMessage.id = Math.floor(Math.random() * 1000);
             onAddMessage(newMessage);
         };
 
         fetch('http://rchat.local/users')
             .then(response => response.json())
             .then(data => setUserList(data));
-    }, []);
-
-    const onLoginInserted = (username) => {
-        axios.post('http://rchat.local/new-user', {username: username});
-    };
-
-    const handleAddMessage = (message) => {
-        const newMessage = {
-            id: Math.floor(Math.random() * 1000),
-            username: user.username,
-            date: moment().format('Y-m-d H:m:s'),
-            message: message
-        }
-
-        axios.post('http://rchat.local/new-message', newMessage);
-    };
+    }, [user]);
 
     const findUserMessage = (selectedUser) => {
         const uri = `http://rchat.local/messages/user/${selectedUser.id}`;
@@ -53,7 +40,10 @@ function Home({messages, onAddMessage, user, users, onUserLogged, setUserList, o
             credentials: 'same-origin'
         })
             .then(response => response.json())
-            .then(data => setUserMessages(data));
+            .then(data => {
+                setUserMessages(data.messages);
+                setSelectedConversation(data.conversation);
+            });
     }
 
     const findRoomMessage = (selectedRoom) => {
@@ -72,15 +62,13 @@ function Home({messages, onAddMessage, user, users, onUserLogged, setUserList, o
     ];
 
     const onSelectUser = user => {
-        onSelectConversation({data: user, type: 'user'});
+        onSelectUserOrRoom({data: user, type: 'user'});
         findUserMessage(user)
     }
 
     const onSelectRoom = room => {
-        onSelectConversation({data: room, type: 'room'});
+        onSelectUserOrRoom({data: room, type: 'room'});
     }
-
-
 
     return (
         user === null ?
@@ -89,7 +77,7 @@ function Home({messages, onAddMessage, user, users, onUserLogged, setUserList, o
                 <AppBar position="static">
                     <Toolbar>
                         <Typography variant="h6">
-                            React Chat App :) hello, {user.username}
+                            React Chat App :) hello, {`${user.name} ${user.surname}`}
                         </Typography>
                     </Toolbar>
                 </AppBar>
@@ -97,18 +85,18 @@ function Home({messages, onAddMessage, user, users, onUserLogged, setUserList, o
                 <Grid container>
                     <Grid item xs={4}>
                         <Paper style={style.Paper}>
-                            <RoomList rooms={rooms} selected={selectedConversation}
+                            <RoomList rooms={rooms} selected={selectedUserOrRoom}
                                       onSelectConversation={onSelectRoom}/>
                             <hr/>
-                            <UserList users={users} selected={selectedConversation}
+                            <UserList users={users} selected={selectedUserOrRoom}
                                       onSelectConversation={onSelectUser}/>
                         </Paper>
                     </Grid>
                     <Grid item xs={8}>
                         <Paper style={style.Paper}>
-                            <MessageList messages={messages}/>
+                            <MessageList messages={messages} />
                         </Paper>
-                        <MessageCreator handleAddMessage={handleAddMessage}/>
+                        <MessageCreator />
                     </Grid>
                 </Grid>
             </Grid>
@@ -121,7 +109,8 @@ const mapStateToProps = state => {
         messages: state.message.messages,
         user: state.main.user,
         users: state.user.users,
-        selectedConversation: state.main.selectedConversation
+        selectedUserOrRoom: state.main.selectedUserOrRoom,
+        messagesRef: state.main.messagesRef
     };
 };
 
@@ -130,10 +119,14 @@ const mapDispatchToProps = dispatch => {
         onAddMessage: message => dispatch({type: actions.MESSAGE_ADD, message: message}),
         onUserLogged: user => dispatch({type: actions.USER_LOGGED, user: user}),
         setUserList: users => dispatch({type: actions.USER_LIST, users: users}),
-        onSelectConversation: selected => dispatch({type: actions.SELECT_CONVERSATION, data: selected}),
+        onSelectUserOrRoom: (userOrRoom) => dispatch({type: actions.SELECT_USER_OR_ROOM, userOrRoom: userOrRoom}),
         setUserMessages: messages => dispatch({type: actions.USER_MESSAGES, messages: messages}),
-        setRoomMessages: messages => dispatch({type: actions.ROOM_MESSAGES, messages: messages})
+        setRoomMessages: messages => dispatch({type: actions.ROOM_MESSAGES, messages: messages}),
+        setSelectedConversation: conversation => dispatch({
+            type: actions.SELECT_CONVERSATION,
+            conversation: conversation
+        })
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
+export default connect(mapStateToProps, mapDispatchToProps, null, {forwardRef: true})(Home)

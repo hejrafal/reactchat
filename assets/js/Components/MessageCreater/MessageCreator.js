@@ -1,8 +1,10 @@
 import React, {useState} from 'react';
 import {Grid, TextField, IconButton} from "@material-ui/core";
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import {connect} from "react-redux";
+import * as actions from "../../store/actions";
 
-const MessageCreator = ({handleAddMessage}) => {
+const MessageCreator = ({selectedConversation, onAddMessage}) => {
 
     const [message, setMessage] = useState('');
 
@@ -13,6 +15,19 @@ const MessageCreator = ({handleAddMessage}) => {
     const onKeyPress = event => {
         event.key === 'Enter' ? createMessage() : null;
     }
+
+    const handleAddMessage = (message) => {
+        const url = `http://rchat.local/new-message/${selectedConversation.id}`;
+        const newMessage = {message: message}
+
+        fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(newMessage),
+        })
+            .then(response => response.json())
+            .then(data => onAddMessage(data))
+        ;
+    };
 
     const createMessage = () => {
         handleAddMessage(message)
@@ -34,4 +49,15 @@ const MessageCreator = ({handleAddMessage}) => {
     );
 }
 
-export default MessageCreator;
+
+const mapStateToProps = state => {
+    return {
+        selectedConversation: state.main.selectedConversation
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {onAddMessage: message => dispatch({type: actions.MESSAGE_ADD, message: message}),}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MessageCreator);

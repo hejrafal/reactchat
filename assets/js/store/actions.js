@@ -8,4 +8,6 @@ export const USER_LOGGED = 'USER_LOGGED';
 
 //main
 export const USER_LIST = 'USER_LIST';
+export const SELECT_USER_OR_ROOM = 'SELECT_USER_OR_ROOM';
 export const SELECT_CONVERSATION = 'SELECT_CONVERSATION';
+export const SET_MESSAGES_REF = 'SET_MESSAGES_REF';

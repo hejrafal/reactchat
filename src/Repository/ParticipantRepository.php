@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\Conversation;
 use App\Entity\Participant;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -17,6 +19,20 @@ class ParticipantRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Participant::class);
+    }
+
+
+
+    public function findOneByUserAndConversation(User $user, Conversation $conversation): ?Participant
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.conversation = :conversation')
+            ->andWhere('p.user = :user')
+            ->setParameter('conversation', $conversation)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
     }
 
     // /**

@@ -31,18 +31,4 @@ class MainController extends AbstractController
 
         return $this->json(['username' => $postData->username]);
     }
-
-    /**
-     * @Route("/new-message", name="new_message", methods={"POST"})
-     */
-    public function newMessage(Request $request, PublisherInterface $publisher)
-    {
-        $postData = json_decode($request->getContent());
-
-        $topic = 'all'; //http://example.com/books/1
-        $update = new Update($topic, $request->getContent());
-        $publisher($update);
-
-        return $this->json([]);
-    }
 }
