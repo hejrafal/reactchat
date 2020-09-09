@@ -14,11 +14,11 @@ const style = {
 
 function Home({
                   messages, onAddMessage, user, users, onUserLogged, setUserList, onSelectUserOrRoom, selectedUserOrRoom,
-                  setUserMessages, setRoomMessages, setSelectedConversation, ...props
+                  setMessages, setSelectedConversation, ...props
               }) {
 
     useEffect(() => {
-        if(!user) {
+        if (!user) {
             return;
         }
 
@@ -34,25 +34,14 @@ function Home({
             .then(data => setUserList(data));
     }, [user]);
 
-    const findUserMessage = (selectedUser) => {
-        const uri = `http://rchat.local/messages/user/${selectedUser.id}`;
-        fetch(uri, {
-            credentials: 'same-origin'
-        })
+    const findMessages = (selectedUserOrRoom, type) => {
+        const uri = `http://rchat.local/messages/${type}/${selectedUserOrRoom.id}`;
+        fetch(uri, {credentials: 'same-origin'})
             .then(response => response.json())
             .then(data => {
-                setUserMessages(data.messages);
+                setMessages(data.messages);
                 setSelectedConversation(data.conversation);
             });
-    }
-
-    const findRoomMessage = (selectedRoom) => {
-        const uri = `http://rchat.local/messages/room/${selectedRoom.id}`;
-        fetch(uri, {
-            credentials: 'same-origin'
-        })
-            .then(response => response.json())
-            .then(data => setRoomMessages(data));
     }
 
     const rooms = [
@@ -61,13 +50,9 @@ function Home({
         {id: 3, name: 'Prywatny 3'}
     ];
 
-    const onSelectUser = user => {
-        onSelectUserOrRoom({data: user, type: 'user'});
-        findUserMessage(user)
-    }
-
-    const onSelectRoom = room => {
-        onSelectUserOrRoom({data: room, type: 'room'});
+    const selectUserOrRoom = (data, type) => {
+        onSelectUserOrRoom({data: data, type: type});
+        findMessages(data, type);
     }
 
     return (
@@ -86,17 +71,17 @@ function Home({
                     <Grid item xs={4}>
                         <Paper style={style.Paper}>
                             <RoomList rooms={rooms} selected={selectedUserOrRoom}
-                                      onSelectConversation={onSelectRoom}/>
+                                      onSelectConversation={data => selectUserOrRoom(data, 'user')}/>
                             <hr/>
                             <UserList users={users} selected={selectedUserOrRoom}
-                                      onSelectConversation={onSelectUser}/>
+                                      onSelectConversation={data => selectUserOrRoom(data, 'room')}/>
                         </Paper>
                     </Grid>
                     <Grid item xs={8}>
                         <Paper style={style.Paper}>
-                            <MessageList messages={messages} />
+                            <MessageList messages={messages}/>
                         </Paper>
-                        <MessageCreator />
+                        <MessageCreator/>
                     </Grid>
                 </Grid>
             </Grid>
@@ -120,8 +105,7 @@ const mapDispatchToProps = dispatch => {
         onUserLogged: user => dispatch({type: actions.USER_LOGGED, user: user}),
         setUserList: users => dispatch({type: actions.USER_LIST, users: users}),
         onSelectUserOrRoom: (userOrRoom) => dispatch({type: actions.SELECT_USER_OR_ROOM, userOrRoom: userOrRoom}),
-        setUserMessages: messages => dispatch({type: actions.USER_MESSAGES, messages: messages}),
-        setRoomMessages: messages => dispatch({type: actions.ROOM_MESSAGES, messages: messages}),
+        setMessages: messages => dispatch({type: actions.SET_MESSAGES, messages: messages}),
         setSelectedConversation: conversation => dispatch({
             type: actions.SELECT_CONVERSATION,
             conversation: conversation

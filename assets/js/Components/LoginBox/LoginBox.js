@@ -28,15 +28,12 @@ export default function ({onUserLogged}) {
             '_csrf_token': 'ueQp3v_yUU4fntTLVLPmoxpVuGc4gaBmITyqR5W7xHY'
         };
 
-        //axios.post('http://rchat.local/login', data).then(data => console.log(data));
-
         fetch('http://rchat.local/login', {
             method: 'POST',
             body: JSON.stringify(data),
         })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
                 if(data.success) {
                     onUserLogged(data.user);
                 }
