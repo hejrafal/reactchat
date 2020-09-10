@@ -62,4 +62,16 @@ class ConversationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findSingleConversation(User $user)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.isSingle = :isSingle')
+            ->leftJoin('c.participants', 'p')
+            ->andWhere('p.user = :user')
+            ->setParameter('isSingle', true)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

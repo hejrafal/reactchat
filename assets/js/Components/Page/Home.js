@@ -29,13 +29,13 @@ function Home({
             onAddMessage(newMessage);
         };
 
-        fetch('http://rchat.local/users')
+        fetch('users')
             .then(response => response.json())
             .then(data => setUserList(data));
     }, [user]);
 
     const findMessages = (selectedUserOrRoom, type) => {
-        const uri = `http://rchat.local/messages/${type}/${selectedUserOrRoom.id}`;
+        const uri = `messages/${type}/${selectedUserOrRoom.id}`;
         fetch(uri, {credentials: 'same-origin'})
             .then(response => response.json())
             .then(data => {
@@ -71,10 +71,10 @@ function Home({
                     <Grid item xs={4}>
                         <Paper style={style.Paper}>
                             <RoomList rooms={rooms} selected={selectedUserOrRoom}
-                                      onSelectConversation={data => selectUserOrRoom(data, 'user')}/>
+                                      onSelectConversation={data => selectUserOrRoom(data, 'room')}/>
                             <hr/>
                             <UserList users={users} selected={selectedUserOrRoom}
-                                      onSelectConversation={data => selectUserOrRoom(data, 'room')}/>
+                                      onSelectConversation={data => selectUserOrRoom(data, 'user')}/>
                         </Paper>
                     </Grid>
                     <Grid item xs={8}>

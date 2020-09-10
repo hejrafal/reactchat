@@ -17,7 +17,7 @@ const MessageCreator = ({selectedConversation, onAddMessage}) => {
     }
 
     const handleAddMessage = (message) => {
-        const url = `http://rchat.local/new-message/${selectedConversation.id}`;
+        const url = `new-message/${selectedConversation.id}`;
         const newMessage = {message: message}
 
         fetch(url, {

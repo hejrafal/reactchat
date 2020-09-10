@@ -21,4 +21,18 @@ class UserController extends AbstractController
             'groups' => ['user:base']
         ]);
     }
+
+    /**
+     * @Route("/new-user", name="new_user", methods={"POST"})
+     */
+    public function newUser(Request $request, PublisherInterface $publisher)
+    {
+        $postData = json_decode($request->getContent());
+
+        $topic = 'all'; //http://example.com/books/1
+        $update = new Update('http://localhost:3000/.well-known/mercure?topic='.$topic, $request->getContent());
+        $publisher($update);
+
+        return $this->json(['username' => $postData->username]);
+    }
 }

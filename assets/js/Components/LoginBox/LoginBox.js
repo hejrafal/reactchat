@@ -28,7 +28,7 @@ export default function ({onUserLogged}) {
             '_csrf_token': 'ueQp3v_yUU4fntTLVLPmoxpVuGc4gaBmITyqR5W7xHY'
         };
 
-        fetch('http://rchat.local/login', {
+        fetch('login', {
             method: 'POST',
             body: JSON.stringify(data),
         })

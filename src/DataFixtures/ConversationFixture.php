@@ -13,6 +13,7 @@ class ConversationFixture extends BaseFixture
         $this->createMany(Conversation::class, 9, function (Conversation $conversation, $i) {
             $conversation
                 ->setIsCouple(true)
+                ->setIsSingle(false)
                 ->setIsMain(false)
             ;
         });

@@ -44,6 +44,12 @@ class Conversation
      */
     private $isCouple;
 
+    /**
+     * @ORM\Column(type="boolean")
+     * @Groups({"conversation"})
+     */
+    private $isSingle;
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();
@@ -117,6 +123,18 @@ class Conversation
     public function setIsCouple(bool $isCouple): self
     {
         $this->isCouple = $isCouple;
+
+        return $this;
+    }
+
+    public function getIsSingle(): ?bool
+    {
+        return $this->isSingle;
+    }
+
+    public function setIsSingle(bool $isSingle): self
+    {
+        $this->isSingle = $isSingle;
 
         return $this;
     }

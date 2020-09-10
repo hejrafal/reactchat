@@ -26,10 +26,18 @@ class MessageController extends BaseController
      */
     public function listUserMessages(User $user, ConversationRepository $conversationRepository, EntityManagerInterface $em, ConversationBuilder $conversationBuilder, MessageRepository $messageRepository)
     {
-        $conv = $conversationRepository->findConversationBetween($this->getUser(), $user);
-        if (!$conv) {
-            $conv = $conversationBuilder->createBetween($this->getUser(), $user);
-            $em->flush();
+        if ($this->getUser() === $user) {
+            $conv = $conversationRepository->findSingleConversation($this->getUser());
+            if (!$conv) {
+                $conv = $conversationBuilder->createSingle($this->getUser());
+                $em->flush();
+            }
+        } else {
+            $conv = $conversationRepository->findConversationBetween($this->getUser(), $user);
+            if (!$conv) {
+                $conv = $conversationBuilder->createBetween($this->getUser(), $user);
+                $em->flush();
+            }
         }
 
         $messages = $messageRepository->findByConversation($conv);
@@ -92,5 +100,24 @@ class MessageController extends BaseController
 
         $update = new Update($topic, $data);
         $publisher($update);
+    }
+
+
+    /**
+     * @Route("/messages/room/{id}", name="list_room_messages", methods={"GET"})
+     * @param Conversation $conversation
+     */
+    public function listRoomMessages(Conversation $conversation, MessageRepository $messageRepository)
+    {
+        $messages = $messageRepository->findByConversation($conversation);
+        $result = [
+            'messages' => $messages,
+            'conversation' => $conversation
+        ];
+
+        return $this->json($result, 200, [], [
+            'groups' => ['messages', 'conversation'],
+            'datetime_format' => 'Y-m-d H:i:s'
+        ]);
     }
 }
