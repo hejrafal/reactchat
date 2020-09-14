@@ -74,4 +74,16 @@ class ConversationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findUsersMultipleConversation(User $user)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.isMultiple = :isMultiple')
+            ->leftJoin('c.participants', 'p')
+            ->andWhere('p.user = :user')
+            ->setParameter('isMultiple', true)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
 }

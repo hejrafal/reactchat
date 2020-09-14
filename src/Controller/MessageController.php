@@ -55,14 +55,14 @@ class MessageController extends BaseController
     /**
      * @Route("/new-message/{id}", name="new_message", methods={"POST"})
      */
-    public function newMessage(Request $request, Conversation $conversation, PublisherInterface $publisher, ParticipantRepository $participantRepository, EntityManagerInterface $em, SerializerInterface $serializer)
+    public function newMessage(Request $request, Conversation $conversation, PublisherInterface $publisher, ParticipantRepository $participantRepository, EntityManagerInterface $em, SerializerInterface $serializer, ConversationBuilder $conversationBuilder)
     {
         $postData = json_decode($request->getContent());
 
         $participant = $participantRepository->findOneByUserAndConversation($this->getUser(), $conversation);
         if (!$participant) {
-            // TODO: create participant
-            die;
+            $participant = $conversationBuilder->addNewParticipantToConversation($conversation, $this->getUser());
+            $em->persist($participant);
         }
 
         $message = new Message();

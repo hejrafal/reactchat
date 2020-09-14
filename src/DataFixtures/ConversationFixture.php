@@ -14,9 +14,19 @@ class ConversationFixture extends BaseFixture
             $conversation
                 ->setIsCouple(true)
                 ->setIsSingle(false)
-                ->setIsMain(false)
+                ->setIsMultiple(false)
+                ->setIsPublic(false)
             ;
         });
+
+        $conversation = new Conversation();
+        $conversation
+            ->setIsPublic(true)
+            ->setIsMultiple(true)
+            ->setIsSingle(false)
+            ->setIsCouple(false)
+            ->setName("Ogólny");
+        $manager->persist($conversation);
 
         $manager->flush();
     }

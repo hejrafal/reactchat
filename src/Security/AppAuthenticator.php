@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Entity\Conversation;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -106,9 +107,19 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator implements Passwor
             return new RedirectResponse($targetPath);
         }
 
-        $data = ['success' => true, 'user' => $token->getUser()];
-        $json = $this->serializer->serialize($data, 'json', ['groups' => ['user:base']]);
+        $conversationRep = $this->entityManager->getRepository(Conversation::class);
+        $users = $this->entityManager->getRepository(User::class)->findAll();
+        $rooms = $conversationRep->findUsersMultipleConversation($token->getUser());
+        $publicRooms = $conversationRep->findBy(['isPublic' => true]);
 
+        $data = [
+            'success' => true,
+            'user' => $token->getUser(),
+            'users' => $users,
+            'rooms' => array_merge($rooms, $publicRooms)
+        ];
+
+        $json = $this->serializer->serialize($data, 'json', ['groups' => ['user:base', 'conversation']]);
         return new Response($json);
     }
 

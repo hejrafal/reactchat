@@ -34,9 +34,9 @@ class ConversationBuilder
         return $conversation;
     }
 
-    public function createRoom(string $name, User $user) : Conversation
+    public function createRoom(string $name, User $user, bool $isPublic) : Conversation
     {
-        $conversation = $this->createConversation(false, false, $name);
+        $conversation = $this->createConversation(false, false, $name, true, $isPublic);
         $p = $this->addNewParticipantToConversation($conversation, $user);
 
         $this->em->persist($conversation);
@@ -56,16 +56,17 @@ class ConversationBuilder
         return $conversation;
     }
 
-    private function createConversation(bool $isCouple, bool $isSingle, string $name = null, bool $isMain = false) : Conversation
+    private function createConversation(bool $isCouple, bool $isSingle, string $name = null, bool $isMultiple = false, bool $isPublic = false) : Conversation
     {
         return (new Conversation())
             ->setIsCouple($isCouple)
             ->setIsSingle($isSingle)
-            ->setIsMain($isMain)
+            ->setIsMultiple($isMultiple)
+            ->setIsPublic($isPublic)
             ->setName($name);
     }
 
-    private function addNewParticipantToConversation(Conversation $conversation, User $user) : Participant
+    public function addNewParticipantToConversation(Conversation $conversation, User $user) : Participant
     {
         $p = (new Participant())->setUser($user);
         $conversation->addParticipant($p);

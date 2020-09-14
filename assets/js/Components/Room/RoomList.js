@@ -7,7 +7,8 @@ const RoomList = ({rooms, selected, onSelectConversation}) => {
     const data = selected ? selected.data : null;
     return (
         <List component="nav">
-            {rooms.map(room => (<Fragment key={room.id}>
+            {rooms.map(room => (
+                <Fragment key={room.id}>
                     <ListItem onClick={() => onSelectConversation(room)} button selected={shallowEqual(data, room)}>
                         <ListItemText primary={room.name}/>
                     </ListItem>

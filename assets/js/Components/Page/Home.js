@@ -13,8 +13,8 @@ const style = {
 };
 
 function Home({
-                  messages, onAddMessage, user, users, onUserLogged, setUserList, onSelectUserOrRoom, selectedUserOrRoom,
-                  setMessages, setSelectedConversation, ...props
+                  messages, onAddMessage, user, users, onSelectUserOrRoom, selectedUserOrRoom,
+                  setMessages, setSelectedConversation, rooms, ...props
               }) {
 
     useEffect(() => {
@@ -28,10 +28,6 @@ function Home({
             const newMessage = JSON.parse(e.data);
             onAddMessage(newMessage);
         };
-
-        fetch('users')
-            .then(response => response.json())
-            .then(data => setUserList(data));
     }, [user]);
 
     const findMessages = (selectedUserOrRoom, type) => {
@@ -44,12 +40,6 @@ function Home({
             });
     }
 
-    const rooms = [
-        {id: 1, name: 'Prywatny 1'},
-        {id: 2, name: 'Prywatny 2'},
-        {id: 3, name: 'Prywatny 3'}
-    ];
-
     const selectUserOrRoom = (data, type) => {
         onSelectUserOrRoom({data: data, type: type});
         findMessages(data, type);
@@ -57,7 +47,7 @@ function Home({
 
     return (
         user === null ?
-            <LoginBox onUserLogged={onUserLogged}/> :
+            <LoginBox /> :
             <Grid container>
                 <AppBar position="static">
                     <Toolbar>
@@ -95,15 +85,14 @@ const mapStateToProps = state => {
         user: state.main.user,
         users: state.user.users,
         selectedUserOrRoom: state.main.selectedUserOrRoom,
-        messagesRef: state.main.messagesRef
+        messagesRef: state.main.messagesRef,
+        rooms: state.room.rooms
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         onAddMessage: message => dispatch({type: actions.MESSAGE_ADD, message: message}),
-        onUserLogged: user => dispatch({type: actions.USER_LOGGED, user: user}),
-        setUserList: users => dispatch({type: actions.USER_LIST, users: users}),
         onSelectUserOrRoom: (userOrRoom) => dispatch({type: actions.SELECT_USER_OR_ROOM, userOrRoom: userOrRoom}),
         setMessages: messages => dispatch({type: actions.SET_MESSAGES, messages: messages}),
         setSelectedConversation: conversation => dispatch({

@@ -36,12 +36,6 @@ class Conversation
      * @ORM\Column(type="boolean")
      * @Groups({"conversation"})
      */
-    private $isMain;
-
-    /**
-     * @ORM\Column(type="boolean")
-     * @Groups({"conversation"})
-     */
     private $isCouple;
 
     /**
@@ -49,6 +43,18 @@ class Conversation
      * @Groups({"conversation"})
      */
     private $isSingle;
+
+    /**
+     * @ORM\Column(type="boolean")
+     * @Groups({"conversation"})
+     */
+    private $isMultiple;
+
+    /**
+     * @ORM\Column(type="boolean")
+     * @Groups({"conversation"})
+     */
+    private $isPublic;
 
     public function __construct()
     {
@@ -103,18 +109,6 @@ class Conversation
         return $this;
     }
 
-    public function getIsMain(): ?bool
-    {
-        return $this->isMain;
-    }
-
-    public function setIsMain(bool $isMain): self
-    {
-        $this->isMain = $isMain;
-
-        return $this;
-    }
-
     public function getIsCouple(): ?bool
     {
         return $this->isCouple;
@@ -135,6 +129,30 @@ class Conversation
     public function setIsSingle(bool $isSingle): self
     {
         $this->isSingle = $isSingle;
+
+        return $this;
+    }
+
+    public function getIsMultiple(): ?bool
+    {
+        return $this->isMultiple;
+    }
+
+    public function setIsMultiple(bool $isMultiple): self
+    {
+        $this->isMultiple = $isMultiple;
+
+        return $this;
+    }
+
+    public function getIsPublic(): ?bool
+    {
+        return $this->isPublic;
+    }
+
+    public function setIsPublic(bool $isPublic): self
+    {
+        $this->isPublic = $isPublic;
 
         return $this;
     }
