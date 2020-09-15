@@ -80,8 +80,9 @@ class ConversationRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('c')
             ->andWhere('c.isMultiple = :isMultiple')
             ->leftJoin('c.participants', 'p')
-            ->andWhere('p.user = :user')
+            ->andWhere('p.user = :user or c.isPublic = :isPublic')
             ->setParameter('isMultiple', true)
+            ->setParameter('isPublic', true)
             ->setParameter('user', $user)
             ->getQuery()
             ->getResult();

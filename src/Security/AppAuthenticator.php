@@ -110,13 +110,12 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator implements Passwor
         $conversationRep = $this->entityManager->getRepository(Conversation::class);
         $users = $this->entityManager->getRepository(User::class)->findAll();
         $rooms = $conversationRep->findUsersMultipleConversation($token->getUser());
-        $publicRooms = $conversationRep->findBy(['isPublic' => true]);
 
         $data = [
             'success' => true,
             'user' => $token->getUser(),
             'users' => $users,
-            'rooms' => array_merge($rooms, $publicRooms)
+            'rooms' => $rooms
         ];
 
         $json = $this->serializer->serialize($data, 'json', ['groups' => ['user:base', 'conversation']]);

@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react';
-import {ListItem, List, ListItemText, Divider} from "@material-ui/core";
+import {ListItem, List, ListItemText, Divider, ListItemSecondaryAction, IconButton} from "@material-ui/core";
 import shallowEqual from "react-redux/lib/utils/shallowEqual";
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 const RoomList = ({rooms, selected, onSelectConversation}) => {
 
@@ -11,6 +12,11 @@ const RoomList = ({rooms, selected, onSelectConversation}) => {
                 <Fragment key={room.id}>
                     <ListItem onClick={() => onSelectConversation(room)} button selected={shallowEqual(data, room)}>
                         <ListItemText primary={room.name}/>
+                        <ListItemSecondaryAction>
+                            <IconButton edge="end" aria-label="comments">
+                                <MoreVertIcon />
+                            </IconButton>
+                        </ListItemSecondaryAction>
                     </ListItem>
                     <Divider/>
                 </Fragment>)

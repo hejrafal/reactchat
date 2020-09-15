@@ -7,6 +7,7 @@ import * as actions from '../../store/actions';
 import UserList from "../User/UserList";
 import MessageList from "../Message/MessageList";
 import RoomList from "../Room/RoomList";
+import TopAppBar from "../AppBar/TopAppBar";
 
 const style = {
     Paper: {padding: 20, margin: 10, height: 300, overflowY: 'auto'}
@@ -49,13 +50,7 @@ function Home({
         user === null ?
             <LoginBox /> :
             <Grid container>
-                <AppBar position="static">
-                    <Toolbar>
-                        <Typography variant="h6">
-                            React Chat App :) hello, {`${user.name} ${user.surname}`}
-                        </Typography>
-                    </Toolbar>
-                </AppBar>
+                <TopAppBar user={user} />
 
                 <Grid container>
                     <Grid item xs={4}>
