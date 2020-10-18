@@ -64,9 +64,9 @@ function Home({
                     </Grid>
                     <Grid item xs={8}>
                         <Paper style={style.Paper}>
-                            <MessageList messages={messages}/>
+                            <MessageList messages={messages} selectedConversation={selectedUserOrRoom}/>
                         </Paper>
-                        <MessageCreator/>
+                        <MessageCreator selectedConversation={selectedUserOrRoom}/>
                     </Grid>
                 </Grid>
             </Grid>

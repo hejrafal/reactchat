@@ -30,8 +30,12 @@ const MessageCreator = ({selectedConversation, onAddMessage}) => {
     };
 
     const createMessage = () => {
-        handleAddMessage(message)
-        setMessage('');
+        if (selectedConversation) {
+            handleAddMessage(message)
+            setMessage('');
+        } else {
+            alert('To who do you want to send message? Choose user or room!');
+        }
     }
 
     return (
