@@ -1,18 +1,18 @@
 import React from 'react';
 import {Paper, Grid, Typography} from "@material-ui/core";
 import {connect} from "react-redux";
-import * as actions from "../../store/actions";
+import avatarUrlGenerator from "../../Utils/avatar";
 
-function Message({createdAt, message, userMessage, user}) {
+function Message({createdAt, message, userMessage}) {
 
     const getFullName = user => `${user.name} ${user.surname}`;
 
     return (
         <Grid container>
-            <Grid item xs={2}>
-                img
+            <Grid item xs={1}>
+                <img src={avatarUrlGenerator(userMessage)} />
             </Grid>
-            <Grid item xs={10}>
+            <Grid item xs={11}>
                 <Grid item xs={12}>
                     {getFullName(userMessage)}
                     {createdAt}
@@ -26,14 +26,4 @@ function Message({createdAt, message, userMessage, user}) {
     )
 }
 
-const mapStateToProps = state => {
-    return {
-        user: state.main.user
-    };
-};
-
-const mapDispatchToProps = dispatch => {
-    return {}
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Message);
+export default Message;
